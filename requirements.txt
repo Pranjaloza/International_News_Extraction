@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+psycopg[binary]
+pandas
+requests
+python-dotenv
+feedparser
+trafilatura
+openai
+beautifulsoup4
+streamlit
+streamlit-autorefresh
