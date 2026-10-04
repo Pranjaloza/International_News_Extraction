@@ -95,7 +95,7 @@ if "article_open" not in st.session_state:
 def load_data():
     """Returns (df, backend_ok). df always has NEWS_COLUMNS so the UI can render when empty."""
     try:
-        res = requests.get(f"{API_URL}/news/latest?limit=50", timeout=10)
+        res = requests.get(f"{API_URL}/news/latest?limit=50", timeout=75)  # free-tier backend can take ~60s to wake
         res.raise_for_status()
         df = pd.DataFrame(res.json(), columns=NEWS_COLUMNS)
         df["fetched_at"] = pd.to_datetime(df["fetched_at"], errors="coerce")
@@ -109,7 +109,7 @@ def load_data():
 
 def call_backend(action):
     try:
-        requests.post(f"{API_URL}/news/{action}", timeout=10).raise_for_status()
+        requests.post(f"{API_URL}/news/{action}", timeout=75).raise_for_status()
         return True
     except Exception as e:
         st.sidebar.error(f"Backend not reachable at {API_URL} — is uvicorn running?")
@@ -153,7 +153,7 @@ st.sidebar.markdown("- Immigration\n- Trade\n- Tariff\n- Sports")
 # =========================
 df, backend_ok = load_data()
 if not backend_ok:
-    st.error(f"⚠️ Backend not reachable at {API_URL}. Start it with: uvicorn app.main:app --port 8000")
+    st.error(f"⚠️ Backend not reachable at {API_URL}. It may be waking up — refresh in a minute.")
 elif df.empty:
     st.info("🕒 Collector not started or no articles yet. Click ▶ Start Collector.")
 
